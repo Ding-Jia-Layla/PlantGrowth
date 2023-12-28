@@ -93,7 +93,7 @@ private:
     void renderVAO();
     bool m_animate=false;
     std::unique_ptr<ngl::Obj> m_mesh;
-    std::string colliderName;
+    std::string m_objFileName;
 
 
 

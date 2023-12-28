@@ -49,9 +49,8 @@ void NGLScene::initializeGL()
     m_frac->addGeneration();
     m_frac->generatePath();
     startTimer(10);
-    colliderName="mesh/cube.obj";
-
-    m_mesh = std::make_unique<ngl::Obj>(colliderName);
+    m_objFileName="mesh/Cylinder.obj";
+    m_mesh = std::make_unique<ngl::Obj> (m_objFileName);
     m_mesh->createVAO();
 }
 void NGLScene::paintGL()
