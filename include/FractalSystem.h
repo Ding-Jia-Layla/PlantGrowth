@@ -22,6 +22,7 @@ struct trunk
 
 
 };
+
 class FractalSystem
 {
 public:

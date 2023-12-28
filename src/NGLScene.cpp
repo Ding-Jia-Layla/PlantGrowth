@@ -49,8 +49,9 @@ void NGLScene::initializeGL()
     m_frac->addGeneration();
     m_frac->generatePath();
     startTimer(10);
-    m_objFileName="mesh/Cylinder.obj";
-    m_mesh = std::make_unique<ngl::Obj> (m_objFileName);
+    std::string m_objFileName("mesh/Cylinder.obj");
+    m_mesh.reset(new ngl::Obj(m_objFileName));
+                              //m_objFileName="mesh/Cylinder.obj";
     m_mesh->createVAO();
 }
 void NGLScene::paintGL()
@@ -67,13 +68,14 @@ void NGLScene::paintGL()
     mouseRotation.m_m[3][2] = m_modelPos.m_z;
     ngl::ShaderLib::use("VegetablesShader");
     ngl::ShaderLib::setUniform("MVP",m_project*m_view*mouseRotation);
-
+    m_mesh->draw();
     renderVAO();
     ngl::ShaderLib::use(ngl::nglColourShader);
-    //ngl::ShaderLib::setUniform("Colour",1.0f,0.0f,1.0f,1.0f);
+    ngl::ShaderLib::setUniform("Colour",1.0f,0.0f,1.0f,1.0f);
     ngl::ShaderLib::setUniform("MVP",m_project * m_view*mouseRotation);
     ngl::VAOPrimitives::draw("floor");
-    m_mesh->draw();
+
+
 }
 void NGLScene::renderVAO() {
     auto m_tree = m_frac->m_tree;
@@ -96,20 +98,20 @@ void NGLScene::renderVAO() {
             restartCount++;
         }
     }
-
     m_vao->bind();
     std::cout<<"Breaking down Count: "<<restartCount<<
              "total points: "<<points.size()<<std::endl;
     glPrimitiveRestartIndex(restart);
     glEnable(GL_PRIMITIVE_RESTART);
+    //TODO:change the type from points to structure including points
     m_vao->setData(ngl::SimpleIndexVAO::VertexData(
             points.size()*sizeof(ngl::Vec3),
             points[0].m_x,
             index.size(), &index[0],
             GL_UNSIGNED_INT));
     m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof (ngl::Vec3), 0);
-//     colours
-//    m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3)*2, 3);
+
+    //m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3), 3);
     m_vao->setNumIndices(points.size());
     m_vao->draw();
     m_vao->unbind();

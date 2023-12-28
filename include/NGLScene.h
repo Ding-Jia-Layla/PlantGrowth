@@ -93,7 +93,13 @@ private:
     void renderVAO();
     bool m_animate=false;
     std::unique_ptr<ngl::Obj> m_mesh;
-    std::string m_objFileName;
+    struct m_plant
+    {
+
+
+    };
+
+
 
 
 

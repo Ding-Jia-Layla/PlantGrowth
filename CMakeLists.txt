@@ -3,15 +3,15 @@ cmake_minimum_required(VERSION 3.20)
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{CMAKE_TOOLCHAIN_FILE})
     set(CMAKE_TOOLCHAIN_FILE $ENV{CMAKE_TOOLCHAIN_FILE})
 endif()
-project(ase_assignment_DingJia)
+project(PLantGrowth)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17)
 # Instruct CMake to run moc automatically when needed (Qt projects only)
 set(CXX_STANDARD_REQUIRED 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
-set(TargetName VegetableOrganicLayout)
-set(TargetTest VegetableOrganicLayoutTest)
+set(TargetName PLantGrowth)
+set(TargetTest PLantGrowthTest)
 # use C++ 17
 find_package(NGL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
@@ -63,4 +63,8 @@ add_custom_target(${TargetName}CopyShaders ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
         $<TARGET_FILE_DIR:${TargetName}>/shaders
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/mesh
+        $<TARGET_FILE_DIR:${TargetName}>/mesh
 )
