@@ -50,8 +50,9 @@ void NGLScene::initializeGL()
     m_frac->generatePath();
     startTimer(10);
     colliderName="mesh/cube.obj";
-    mesh = std::make_shared<ngl::Obj>(colliderName);
-    mesh->createVAO();
+
+    m_mesh = std::make_unique<ngl::Obj>(colliderName);
+    m_mesh->createVAO();
 }
 void NGLScene::paintGL()
 {
@@ -73,6 +74,7 @@ void NGLScene::paintGL()
     //ngl::ShaderLib::setUniform("Colour",1.0f,0.0f,1.0f,1.0f);
     ngl::ShaderLib::setUniform("MVP",m_project * m_view*mouseRotation);
     ngl::VAOPrimitives::draw("floor");
+    m_mesh->draw();
 }
 void NGLScene::renderVAO() {
     auto m_tree = m_frac->m_tree;

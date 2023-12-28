@@ -7,6 +7,7 @@
 #include <QOpenGLWindow>
 #include "FractalSystem.h"
 #include <memory>
+#include <ngl/Obj.h>
 //----------------------------------------------------------------------------------------------------------------------
 /// @file NGLScene.h
 /// @brief this class inherits from the Qt OpenGLWindow and allows us to use NGL to draw OpenGL
@@ -91,7 +92,8 @@ private:
     std::unique_ptr<FractalSystem> m_frac;
     void renderVAO();
     bool m_animate=false;
-    std::shared_ptr<ngl::Obj> mesh;
+    std::unique_ptr<ngl::Obj> m_mesh;
+    std::string colliderName;
 
 
 
