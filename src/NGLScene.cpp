@@ -68,6 +68,7 @@ void NGLScene::paintGL()
     mouseRotation.m_m[3][2] = m_modelPos.m_z;
     ngl::ShaderLib::use("VegetablesShader");
     ngl::ShaderLib::setUniform("MVP",m_project*m_view*mouseRotation);
+    ngl::ShaderLib::setUniform("PlantColor",0.5f,0.0f,1.0f,1.0f);
     m_mesh->draw();
     renderVAO();
     ngl::ShaderLib::use(ngl::nglColourShader);
@@ -80,10 +81,13 @@ void NGLScene::paintGL()
 void NGLScene::renderVAO() {
     auto m_tree = m_frac->m_tree;
     std::vector<ngl::Vec3> points;
+    ngl::Vec3 baseColour(0.1f,0.2f,0.1f);
+    ngl::Vec3 tipColour(0.0f,1.0f,0.0f);
     std::vector<GLuint> index;
     GLuint idx=0;
     GLuint restart = std::numeric_limits<GLuint>::max() - 1;
     int restartCount = 0;
+    //add all points of each branch
     for (auto t: m_tree) {
         points.push_back(t.startPos);
         index.push_back(idx++);
