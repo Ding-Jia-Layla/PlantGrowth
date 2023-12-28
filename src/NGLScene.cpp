@@ -39,7 +39,6 @@ void NGLScene::initializeGL()
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
     m_vao = ngl::VAOFactory::createVAO(ngl::simpleIndexVAO,GL_LINE_STRIP);
-
   //ctor
   m_frac = std::make_unique<FractalSystem>(ngl::Vec3(0.0f,1.0f,0.0f),ngl::Vec3(0.0f,0.0f,0.0f));
   ngl::ShaderLib::loadShader("VegetablesShader","shaders/VVertex.glsl","shaders/VFragment.glsl");
@@ -51,7 +50,7 @@ void NGLScene::initializeGL()
     startTimer(10);
     std::string m_objFileName("mesh/Cylinder.obj");
     m_mesh.reset(new ngl::Obj(m_objFileName));
-                              //m_objFileName="mesh/Cylinder.obj";
+
     m_mesh->createVAO();
 }
 void NGLScene::paintGL()
@@ -66,15 +65,19 @@ void NGLScene::paintGL()
     mouseRotation.m_m[3][0] = m_modelPos.m_x;
     mouseRotation.m_m[3][1] = m_modelPos.m_y;
     mouseRotation.m_m[3][2] = m_modelPos.m_z;
+
     ngl::ShaderLib::use("VegetablesShader");
     ngl::ShaderLib::setUniform("MVP",m_project*m_view*mouseRotation);
     ngl::ShaderLib::setUniform("PlantColor",0.5f,0.0f,1.0f,1.0f);
-    m_mesh->draw();
     renderVAO();
+
     ngl::ShaderLib::use(ngl::nglColourShader);
     ngl::ShaderLib::setUniform("Colour",1.0f,0.0f,1.0f,1.0f);
     ngl::ShaderLib::setUniform("MVP",m_project * m_view*mouseRotation);
     ngl::VAOPrimitives::draw("floor");
+
+    ngl::ShaderLib::setUniform("Colour",1.0f,0.0f,1.0f,1.0f);
+    m_mesh->draw();
 
 
 }
@@ -90,8 +93,10 @@ void NGLScene::renderVAO() {
     //add all points of each branch
     for (auto t: m_tree) {
         points.push_back(t.startPos);
+        points.push_back(baseColour);
         index.push_back(idx++);
         points.push_back(t.endPos);
+        points.push_back(tipColour);
         index.push_back(idx++);
         index.push_back(restart);
     }
@@ -115,8 +120,8 @@ void NGLScene::renderVAO() {
             GL_UNSIGNED_INT));
     m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof (ngl::Vec3), 0);
 
-    //m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3), 3);
-    m_vao->setNumIndices(points.size());
+    m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3), 3);
+    m_vao->setNumIndices(points.size()/2);
     m_vao->draw();
     m_vao->unbind();
     glDisable(GL_PRIMITIVE_RESTART);

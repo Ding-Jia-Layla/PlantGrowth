@@ -4,6 +4,8 @@ in vec3 PlantColor;
 
 void main()
 {
-    fragColour=vec4(PlantColor,1.0);
+    fragColour.rgb = PlantColor;
 
 }
+
+
