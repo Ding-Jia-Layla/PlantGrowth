@@ -82,7 +82,7 @@ private:
     /// @param _event the Qt Event structure
     //----------------------------------------------------------------------------------------------------------------------
     void wheelEvent( QWheelEvent *_event) override;
-    std::unique_ptr<ngl::AbstractVAO> m_vao;
+
     /// @brief windows parameters for mouse control etc.
     WinParams m_win;
     /// position for our model
@@ -90,7 +90,7 @@ private:
     ngl::Mat4 m_view;
     ngl::Mat4 m_project;
     std::unique_ptr<FractalSystem> m_frac;
-    void renderVAO();
+
     bool m_animate=false;
     std::unique_ptr<ngl::Obj> m_mesh;
     struct m_plant

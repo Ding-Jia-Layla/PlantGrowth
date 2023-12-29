@@ -1,9 +1,9 @@
 #include "FractalSystem.h"
-
+#include <ngl/VAOFactory.h>
 #include <iostream>
 #include <ngl/Random.h>
 #include "NGLScene.h"
-
+#include <ngl/SimpleIndexVAO.h>
 #include <cmath>
 #include <limits>
 bool State::operator==(const State &ref) const
@@ -17,6 +17,7 @@ FractalSystem::FractalSystem(ngl::Vec3 _dir, ngl::Vec3 _pos)
 //    ngl::Random::addIntGenerator("numLines",numLines);
     currentState.dir = _dir;
     currentState.pos = _pos;
+    m_vao = ngl::VAOFactory::createVAO(ngl::simpleIndexVAO,GL_LINE_STRIP);
 
 }
 void FractalSystem::addGeneration()
@@ -52,6 +53,7 @@ State FractalSystem::getCurrentStates()
 {
     return currentState;
 }
+
 void FractalSystem::generatePath() {
     std::cout<<"forming the path"<<std::endl;
     stateStack.push_back(currentState);
@@ -92,7 +94,56 @@ void FractalSystem::generatePath() {
                 break;
         }
     }
+
 }
+//TODO:renderVAO must be in the generatePath()
+void FractalSystem::renderVAO() {
+
+    std::vector<ngl::Vec3> points;
+    ngl::Vec3 baseColour(0.1f,0.2f,0.1f);
+    ngl::Vec3 tipColour(0.0f,1.0f,0.0f);
+    std::vector<GLuint> index;
+    GLuint idx=0;
+    GLuint restart = std::numeric_limits<GLuint>::max() - 1;
+    int restartCount = 0;
+    //add all points of each branch
+    for (auto t: m_tree) {
+        points.push_back(t.startPos);
+        points.push_back(baseColour);
+        index.push_back(idx++);
+        points.push_back(t.endPos);
+        points.push_back(tipColour);
+        index.push_back(idx++);
+        index.push_back(restart);
+    }
+    for (auto dx : index)
+    {
+        if (dx == restart)
+        {
+            restartCount++;
+        }
+    }
+    m_vao->bind();
+    std::cout<<"Breaking down Count: "<<restartCount<<
+             "total points: "<<points.size()<<std::endl;
+    glPrimitiveRestartIndex(restart);
+    glEnable(GL_PRIMITIVE_RESTART);
+    m_vao->setData(ngl::SimpleIndexVAO::VertexData(
+            points.size()*sizeof(ngl::Vec3),
+            points[0].m_x,
+            index.size(), &index[0],
+            GL_UNSIGNED_INT));
+    //how to locate each vertex to set all attributes of each vertex
+    //each point in the array has a position and a color, a single point occupies the size of 2 ngl::Vec3.
+    m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof (ngl::Vec3)*2, 0);
+
+    m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3)*2, sizeof(ngl::Vec3));
+    m_vao->setNumIndices(points.size()/2);
+    m_vao->draw();
+    m_vao->unbind();
+    glDisable(GL_PRIMITIVE_RESTART);
+}
+
 
 //TODO:B-Spline
 //std::vector<ngl::Vec3> FractalSystem::Line(ngl::Vec3 _sPoint, ngl::Vec3 _ePoint) {

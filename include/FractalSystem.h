@@ -5,6 +5,7 @@
 #include <vector>
 #include <ngl/AbstractVAO.h>
 #include <memory>
+
 struct State
 {
     //start point for the next segment
@@ -30,18 +31,18 @@ public:
     FractalSystem(ngl::Vec3 _dir, ngl::Vec3 _pos);
     void generatePath();
     void addGeneration();
-    //std::vector<ngl::Vec3> Line(ngl::Vec3 _sPoint, ngl::Vec3 _ePoint);
+    void renderVAO();
+    //std::unique_ptr<ngl::AbstractVAO> getVAO();
     std::vector<State> stateStack;
     Grammar g;
     State getCurrentStates();
-    void renderVAO();
     float distance = 1.0f;
     //std::vector<ngl::Vec3> m_points;
     std::vector<trunk> m_tree;
     std::vector<ngl::Vec3> m_plant;
 private:
     State currentState;
-
+    std::unique_ptr<ngl::AbstractVAO> m_vao;
 
     std::vector<ngl::Vec3> line;
 
