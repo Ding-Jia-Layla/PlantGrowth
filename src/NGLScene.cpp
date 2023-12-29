@@ -8,7 +8,6 @@
 #include <ngl/Util.h>
 #include <iostream>
 
-
 NGLScene::NGLScene()
 {
   // re-size the widget to that of the parent (in this case the GLFrame passed in on construction)
@@ -42,7 +41,6 @@ void NGLScene::initializeGL()
   m_frac = std::make_unique<FractalSystem>(ngl::Vec3(0.0f,1.0f,0.0f),ngl::Vec3(0.0f,0.0f,0.0f));
   m_view = ngl::lookAt({0,15,15},{0,0,0},{0,1,0});
   ngl::VAOPrimitives::createLineGrid("floor",10,10,10);
-
     startTimer(10);
     std::string m_objFileName("mesh/Cylinder.obj");
     m_mesh.reset(new ngl::Obj(m_objFileName));

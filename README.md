@@ -37,6 +37,7 @@ What it should look like
 The current output via calling renderVAO in paintGL
 - ![MicrosoftTeams-image (2).png](result%2FMicrosoftTeams-image%20%282%29.png)
 calling generatePath() and renderVAO() in paintGL
-- # Week9 
-- TODO: import object
-- ![tree.png](result%2Ftree.png)
+- # Week9
+- base:![tree.png](result%2Ftree.png)
+- knotty:![multisegmental rotary.png](result%2Fmultisegmental%20rotary.png)
+- bunch:![bunch.png](result%2Fbunch.png)

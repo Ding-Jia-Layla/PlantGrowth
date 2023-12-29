@@ -6,6 +6,7 @@
 #include <ngl/SimpleIndexVAO.h>
 #include <cmath>
 #include <limits>
+#include <ngl/Transformation.h>
 bool State::operator==(const State &ref) const
 {
     return(this->dir==ref.dir);
@@ -32,7 +33,7 @@ void FractalSystem::addGeneration()
 //    g.addGeneration('X',"F[FX]F");
 //START POINT EXISTED
 //store(0)<point[index]> go(1) store(1) go(2) back(1) go(3) back(0) go(4)
-    g.addGeneration('X',"F[F[FX]FF]FFF");
+    g.addGeneration('X',"F[+[[[X]+F]++F]+++F");
     g.setStart("X");
     //TODO:iterate calling shouldn't in here.
     g.iterate(1);
@@ -57,6 +58,11 @@ State FractalSystem::getCurrentStates()
 
 void FractalSystem::generatePath() {
     std::cout<<"forming the path"<<std::endl;
+
+    //default constructor
+    ngl::Transformation tx;
+    tx.setRotation(-10,0,0);
+
     stateStack.push_back(currentState);
     std::cout<<g.getResult()<<std::endl;
     //get the current state
@@ -71,17 +77,11 @@ void FractalSystem::generatePath() {
                 currentState.pos.m_y += currentState.dir.m_y * distance;
                 currentState.pos.m_z += currentState.dir.m_z * distance;
                 temp_trunk.endPos = currentState.pos;
-//                Line(temp_trunk.startPos,temp_trunk.endPos);
-//                for(auto p:m_points)
-//                {
-//                    temp_trunk.addPosToTrunk(p);
-//                }
                 m_tree.push_back(temp_trunk);
                 break;
                 //[ ] are just to manage the conditions
             case '[':
                 //add this state
-                currentState.dir = ngl::Vec3{1.0f, 1.0f, 0.0f};
                 stateStack.push_back(currentState);
                 break;
             case ']':
@@ -89,8 +89,17 @@ void FractalSystem::generatePath() {
                 //to get this one, need to delete the new one after add it.
                 currentState = stateStack.at(stateStack.size() - 1);
                 stateStack.pop_back();
-                currentState.dir = ngl::Vec3{-1.5f, 2.0f, 0.0f};
+                //currentState.dir = ngl::Vec3{-1.5f, 2.0f, 0.0f};
                 break;
+            case '+':
+               currentState.dir = ngl::Vec4{currentState.dir,1.0}*tx.getMatrix();
+               std::cout<<currentState.dir.m_x
+                        <<currentState.dir.m_y
+                        <<currentState.dir.m_z
+                        <<std::endl;
+               break;
+
+
             default:
                 break;
         }
