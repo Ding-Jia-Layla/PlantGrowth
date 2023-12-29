@@ -17,8 +17,9 @@ FractalSystem::FractalSystem(ngl::Vec3 _dir, ngl::Vec3 _pos)
 //    ngl::Random::addIntGenerator("numLines",numLines);
     currentState.dir = _dir;
     currentState.pos = _pos;
-    m_vao = ngl::VAOFactory::createVAO(ngl::simpleIndexVAO,GL_LINE_STRIP);
+    //m_vao = ngl::VAOFactory::createVAO(ngl::simpleIndexVAO,GL_LINE_STRIP);
 
+    m_vao = ngl::VAOFactory::createVAO(ngl::simpleIndexVAO,GL_LINE_STRIP);
 }
 void FractalSystem::addGeneration()
 {
@@ -31,7 +32,7 @@ void FractalSystem::addGeneration()
 //    g.addGeneration('X',"F[FX]F");
 //START POINT EXISTED
 //store(0)<point[index]> go(1) store(1) go(2) back(1) go(3) back(0) go(4)
-    g.addGeneration('X',"F[F[FX]F]F");
+    g.addGeneration('X',"F[F[FX]FF]FFF");
     g.setStart("X");
     //TODO:iterate calling shouldn't in here.
     g.iterate(1);
@@ -98,24 +99,28 @@ void FractalSystem::generatePath() {
 }
 //TODO:renderVAO must be in the generatePath()
 void FractalSystem::renderVAO() {
-
-    std::vector<ngl::Vec3> points;
-    ngl::Vec3 baseColour(0.1f,0.2f,0.1f);
-    ngl::Vec3 tipColour(0.0f,1.0f,0.0f);
     std::vector<GLuint> index;
+    m_points.clear();
+    index.clear();
+
+    //green
+    ngl::Vec3 baseColour(0.0f,1.0f,0.0f);
+    //yellow
+    ngl::Vec3 tipColour(1.0f, 1.0f,0.1f);
     GLuint idx=0;
     GLuint restart = std::numeric_limits<GLuint>::max() - 1;
     int restartCount = 0;
     //add all points of each branch
     for (auto t: m_tree) {
-        points.push_back(t.startPos);
-        points.push_back(baseColour);
+        m_points.push_back(t.startPos);
+        m_points.push_back(baseColour);
         index.push_back(idx++);
-        points.push_back(t.endPos);
-        points.push_back(tipColour);
+        m_points.push_back(t.endPos);
+        m_points.push_back(tipColour);
         index.push_back(idx++);
         index.push_back(restart);
     }
+
     for (auto dx : index)
     {
         if (dx == restart)
@@ -123,27 +128,28 @@ void FractalSystem::renderVAO() {
             restartCount++;
         }
     }
+        std::cout<<"Breaking down Count: "<<restartCount<<
+             "total points: "<<m_points.size()<<std::endl;
+
+    //TODO: 放在GL的paintGL里之后就不停地产生了新的点points一直疯狂增加
     m_vao->bind();
-    std::cout<<"Breaking down Count: "<<restartCount<<
-             "total points: "<<points.size()<<std::endl;
     glPrimitiveRestartIndex(restart);
     glEnable(GL_PRIMITIVE_RESTART);
     m_vao->setData(ngl::SimpleIndexVAO::VertexData(
-            points.size()*sizeof(ngl::Vec3),
-            points[0].m_x,
+            m_points.size()*sizeof(ngl::Vec3),
+            m_points[0].m_x,
             index.size(), &index[0],
             GL_UNSIGNED_INT));
     //how to locate each vertex to set all attributes of each vertex
     //each point in the array has a position and a color, a single point occupies the size of 2 ngl::Vec3.
     m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof (ngl::Vec3)*2, 0);
-
-    m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3)*2, sizeof(ngl::Vec3));
-    m_vao->setNumIndices(points.size()/2);
+    m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3)*2, 3);
+    //16 points have 4 segments 8 positions and 8 color
+    m_vao->setNumIndices(m_points.size());
     m_vao->draw();
     m_vao->unbind();
     glDisable(GL_PRIMITIVE_RESTART);
 }
-
 
 //TODO:B-Spline
 //std::vector<ngl::Vec3> FractalSystem::Line(ngl::Vec3 _sPoint, ngl::Vec3 _ePoint) {

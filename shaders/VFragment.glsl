@@ -4,7 +4,11 @@ in vec3 PlantColor;
 
 void main()
 {
-    fragColour.rgb = PlantColor;
+    fragColour = vec4(PlantColor, 1.0);
+//     if (PlantColor.z == 0.0f) {
+//         fragColour = vec4(1.0, 0.0, 0.0, 1.0); // 红色
+//     }
+
 
 }
 

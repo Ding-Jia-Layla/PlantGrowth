@@ -40,11 +40,14 @@ public:
     //std::vector<ngl::Vec3> m_points;
     std::vector<trunk> m_tree;
     std::vector<ngl::Vec3> m_plant;
+
 private:
     State currentState;
     std::unique_ptr<ngl::AbstractVAO> m_vao;
-
     std::vector<ngl::Vec3> line;
+    //points must be the local variable can't be global.
+    //在方法结束时，m_points 将会被销毁
+    std::vector<ngl::Vec3> m_points;
 
 
 

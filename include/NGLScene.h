@@ -90,14 +90,9 @@ private:
     ngl::Mat4 m_view;
     ngl::Mat4 m_project;
     std::unique_ptr<FractalSystem> m_frac;
-
     bool m_animate=false;
     std::unique_ptr<ngl::Obj> m_mesh;
-    struct m_plant
-    {
 
-
-    };
 
 
 

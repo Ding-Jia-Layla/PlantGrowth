@@ -39,3 +39,4 @@ The current output via calling renderVAO in paintGL
 calling generatePath() and renderVAO() in paintGL
 - # Week9 
 - TODO: import object
+- ![tree.png](result%2Ftree.png)

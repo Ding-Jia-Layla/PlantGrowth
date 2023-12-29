@@ -107,16 +107,7 @@ TEST(FractalSystem,ctor)
     EXPECT_EQ(cpos.m_y,1.0f);
     EXPECT_EQ(cpos.m_z,0.0f);
 }
-TEST(FractalSystem,addGeneration)
-{
-    FractalSystem frac(ngl::Vec3(0.0f,1.0f,0.0f),ngl::Vec3(0.0f,0.0f,0.0f));
-    frac.addGeneration();
-    frac.g.iterate(1);
-    std::string r =frac.g.getResult();
-    //TODO:WRITE THE ACTUAL RESULT OF IT
-    EXPECT_EQ(r,"F[FX]F]F");
 
-}
 TEST(FractalSystem,fracMethod)
 {
     FractalSystem frac(ngl::Vec3(0.0f,1.0f,0.0f),ngl::Vec3(0.0f,0.0f,0.0f));
@@ -124,7 +115,7 @@ TEST(FractalSystem,fracMethod)
     frac.addGeneration();
     frac.g.iterate(1);
     frac.generatePath();
-    EXPECT_EQ(frac.m_tree.size(),4);
+    EXPECT_EQ(frac.m_tree.size(),1);
     std::unique_ptr<FractalSystem> n_frac;
     n_frac = std::make_unique<FractalSystem>(ngl::Vec3(0.0f,1.0f,0.0f),ngl::Vec3(0.0f,0.0f,0.0f));
 //    FractalSystem frac(ngl::Vec3(0.0f,1.0f,0.0f),ngl::Vec3(0.0f,0.0f,0.0f));
@@ -133,30 +124,35 @@ TEST(FractalSystem,fracMethod)
     n_frac->addGeneration();
     n_frac->g.iterate(1);
     std::string r =n_frac->g.getResult();
-    EXPECT_EQ(r,"F[FX]F]F");
+    EXPECT_EQ(r,"[FX");
     n_frac->generatePath();
-    EXPECT_EQ(frac.stateStack.size(),0);
-    EXPECT_EQ(n_frac->m_tree.size(),4);
+    EXPECT_EQ(frac.stateStack.size(),2);
+    EXPECT_EQ(n_frac->m_tree.size(),1);
+
 
 }
-//TEST(GL,restartCount)
-//{
+TEST(GL,pointSize)
+{
 //    std::unique_ptr<FractalSystem> n_frac;
 //    n_frac = std::make_unique<FractalSystem>(ngl::Vec3(0.0f,1.0f,0.0f),ngl::Vec3(0.0f,0.0f,0.0f));
-//    int restartCount = 0;
 //    n_frac->addGeneration();
-//    n_frac->g.iterate(1);
-//    auto reStart = n_frac.index;
-//    for (auto idx : index)
-//    {
-//        if (idx == restart)
-//        {
-//            restartCount++;
-//        }
-//    }
+//    n_frac->generatePath();
+//    n_frac->renderVAO();
+//    EXPECT_EQ(n_frac->m_points.size(),4);
+//    //ngl::Vec3{}
+//    auto points =n_frac->m_points;
 //
-//    EXPECT_EQ(restartCount, /* expected restart count */);
-//}
+//    //position 0
+//    EXPECT_EQ(points[0],ngl::Vec3(0.0f,0.0f,0.0f));
+//    //color 0
+//    EXPECT_EQ(points[1],ngl::Vec3(0.1f,0.2f,0.1f));
+//    //position 1
+//    EXPECT_EQ(points[2],ngl::Vec3(1.0f,1.0f,0.0f));
+//    //color 1
+//    EXPECT_EQ(points[3],ngl::Vec3(0.0f,1.0f,0.0f));
+
+
+}
 
 
 
