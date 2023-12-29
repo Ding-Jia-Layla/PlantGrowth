@@ -37,6 +37,16 @@ void FractalSystem::addGeneration()
 
 
 }
+/*
++ Turn left by angle δ, using rotation matrix RU(δ).
+− Turn right by angle δ, using rotation matrix RU(−δ).
+& Pitch down by angle δ, using rotation matrix RL(δ).
+∧ Pitch up by angle δ, using rotation matrix RL(−δ).
+\ Roll left by angle δ, using rotation matrix RH(δ).
+/ Roll right by angle δ, using rotation matrix RH(−δ).
+| Turn around, using rotation matrix RU(180◦).
+
+ */
 //TODO:add random function to select one of the grammar.
 State FractalSystem::getCurrentStates()
 {

@@ -59,7 +59,7 @@ target_sources(${TargetTest} PRIVATE
 target_link_libraries(${TargetTest} PRIVATE Qt::Widgets Qt::OpenGL NGL)
 target_link_libraries(${TargetTest} PRIVATE GTest::gtest GTest::gtest_main)
 target_link_libraries(${TargetName} PRIVATE Qt::Widgets Qt::OpenGL NGL)
-add_custom_target(${TargetName}CopyShaders ALL
+add_custom_target(${TargetName}CopyFiles ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
         $<TARGET_FILE_DIR:${TargetName}>/shaders

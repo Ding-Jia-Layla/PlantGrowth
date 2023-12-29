@@ -72,11 +72,9 @@ void NGLScene::paintGL()
     renderVAO();
 
     ngl::ShaderLib::use(ngl::nglColourShader);
-    ngl::ShaderLib::setUniform("Colour",1.0f,0.0f,1.0f,1.0f);
+    ngl::ShaderLib::setUniform("Colour",0.6f, 0.6f, 0.6f, 1.0f);
     ngl::ShaderLib::setUniform("MVP",m_project * m_view*mouseRotation);
     ngl::VAOPrimitives::draw("floor");
-
-    ngl::ShaderLib::setUniform("Colour",1.0f,0.0f,1.0f,1.0f);
     m_mesh->draw();
 
 
@@ -118,9 +116,11 @@ void NGLScene::renderVAO() {
             points[0].m_x,
             index.size(), &index[0],
             GL_UNSIGNED_INT));
-    m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof (ngl::Vec3), 0);
+    //how to locate each vertex to set all attributes of each vertex
+    //each point in the array has a position and a color, a single point occupies the size of 2 ngl::Vec3.
+    m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof (ngl::Vec3)*2, 0);
 
-    m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3), 3);
+    m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(ngl::Vec3)*2, sizeof(ngl::Vec3));
     m_vao->setNumIndices(points.size()/2);
     m_vao->draw();
     m_vao->unbind();
